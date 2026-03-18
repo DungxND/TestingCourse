@@ -54,6 +54,10 @@ sonar {
         property("sonar.projectKey", "DungxND_TestingCourse")
         property("sonar.organization", "dungxnd")
         property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.sources", "${project.projectDir}/src/main/kotlin")
+        property("sonar.tests", "${project.projectDir}/src/test/kotlin")
+        property("sonar.kotlin.binaries", "${project.projectDir}/build/classes/kotlin/main")
+        property("sonar.kotlin.test.binaries", "${project.projectDir}/build/classes/kotlin/test")
         property("sonar.coverage.jacoco.xmlReportPaths",
             "build/reports/jacoco/test/jacocoTestReport.xml")
         property("sonar.junit.reportPaths",

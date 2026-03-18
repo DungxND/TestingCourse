@@ -1,7 +1,6 @@
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.FunSpec
 import io.kotest.matchers.shouldBe
-import vn.io.dungxnd.calculateTotal
 
 class CalculateTotalTest : FunSpec({
     test("TC-01: Giá tạm tính không hợp lệ - subtotal=0 ném IllegalArgumentException") {

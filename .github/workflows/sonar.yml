@@ -42,8 +42,10 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Run Kotest + JaCoCo
-        run: ./gradlew test jacocoTestReport
+      - name: Run Tests, JaCoCo & SonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew test jacocoTestReport sonar --info
 
       - name: Upload Kotest HTML report
         uses: actions/upload-artifact@v7
@@ -59,7 +61,9 @@ jobs:
           name: jacoco-report
           path: build/reports/jacoco/test/html/
 
-      - name: Build and SonarQube analyze
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: ./gradlew build sonar --info -x test
+      - name: Upload test results XML
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: test-results
+          path: build/test-results/test/
