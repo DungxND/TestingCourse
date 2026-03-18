@@ -14,9 +14,8 @@ fun main() {
 }
 
 fun calculateTotal(subtotal: Long, memberTier: String, voucherAmount: Long): Long {
-    if (subtotal <= 0) throw IllegalArgumentException("subTotal should be > 0")
-
-    if (voucherAmount !in 0..500000 || voucherAmount % 10000 != 0L) throw IllegalArgumentException("voucherAmount should be >= 0 and <=500.000 and is a multiple of 10.000")
+    require (subtotal > 0) {"subTotal should be > 0"}
+    require (voucherAmount !in 0..500000 || voucherAmount % 10000 != 0L) {"voucherAmount should be >= 0 and <=500.000 and is a multiple of 10.000"}
 
     val tier = memberTier.lowercase()
     val discountRate = when (tier) {
