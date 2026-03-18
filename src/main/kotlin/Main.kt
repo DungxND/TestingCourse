@@ -1,7 +1,5 @@
 package vn.io.dungxnd
 
-import java.util.Locale
-import java.util.Locale.getDefault
 import kotlin.math.roundToLong
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -10,7 +8,6 @@ fun main() {
     try {
         val total = calculateTotal(200000, "Silver", 500000)
         println("Thanh tien: $total")
-        // Giải thích: 200k - 5% (10k) = 190k. 190k > 100k nên áp voucher 50k -> còn 140k.
     } catch (e: IllegalArgumentException) {
         println("Lỗi: ${e.message}")
     }

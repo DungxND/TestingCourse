@@ -1,6 +1,7 @@
 plugins {
     kotlin("jvm") version "2.3.0"
     id("info.solidsoft.pitest") version "1.19.0-rc.3"
+    id("org.sonarqube") version "7.2.3.7755"
     jacoco
 }
 
@@ -41,6 +42,18 @@ pitest {
     targetClasses.set(setOf("vn.io.dungxnd.*"))
     outputFormats.set(setOf("XML", "HTML"))
     timestampedReports.set(false)
+}
+
+sonar {
+    properties {
+        property("sonar.projectKey", "DungxND_TestingCourse")
+        property("sonar.organization", "dungxnd")
+        property("sonar.host.url", "https://sonarcloud.io")
+        property("sonar.coverage.jacoco.xmlReportPaths",
+            "build/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.junit.reportPaths",
+            "build/test-results/test")
+    }
 }
 
 kotlin {

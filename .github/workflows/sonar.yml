@@ -1,0 +1,65 @@
+name: CI - Test, Coverage & SonarQube
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: Build, Test & Analyze
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          java-version: 25
+          distribution: 'temurin'
+
+      - name: Cache SonarQube packages
+        uses: actions/cache@v5
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: ${{ runner.os }}-gradle
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run Kotest + JaCoCo
+        run: ./gradlew test jacocoTestReport
+
+      - name: Upload Kotest HTML report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: kotest-report
+          path: build/reports/tests/test/
+
+      - name: Upload JaCoCo HTML report
+        uses: actions/upload-artifact@v7
+        if: always()
+        with:
+          name: jacoco-report
+          path: build/reports/jacoco/test/html/
+
+      - name: Build and SonarQube analyze
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: ./gradlew build sonar --info -x test
