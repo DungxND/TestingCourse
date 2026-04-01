@@ -73,7 +73,7 @@ jobs:
         if: always() && github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
         with:
-          path: build/reports/allure-report
+          path: build/reports/allure-report/allureReport
 
   deploy:
     name: Deploy to GitHub Pages

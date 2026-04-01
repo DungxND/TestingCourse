@@ -17,8 +17,15 @@ dependencies {
 }
 
 allure {
-    adapter.autoconfigure = false
-    version = "2.33.0"
+    adapter {
+        autoconfigure.set(false)
+        frameworks {
+            junit5 {
+                enabled.set(false)
+            }
+        }
+    }
+    version = "2.38.1"
 }
 tasks.test {
     useJUnitPlatform()

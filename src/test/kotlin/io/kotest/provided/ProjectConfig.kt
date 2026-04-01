@@ -11,6 +11,6 @@ object ProjectConfig : AbstractProjectConfig() {
             useTestPathAsName = true,
             outputDir = "test-results/kotest"
         ),
-        AllureTestReporter()
+        AllureTestReporter(includeContainers = false)
     )
 }
