@@ -13,7 +13,6 @@ fun calculateTotal(subtotal: Long, memberTier: String, voucherAmount: Long): Lon
 
     val subtotalAfterDisCount = subtotal - (discountRate*subtotal).roundToLong()
 
-
     var totalAmount = subtotalAfterDisCount
     if (totalAmount >=100000 && voucherAmount > 0) {
         totalAmount -= voucherAmount

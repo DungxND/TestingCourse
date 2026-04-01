@@ -1,36 +1,26 @@
-
 plugins {
-    kotlin("jvm") version "2.3.0"
-    id("info.solidsoft.pitest") version "1.19.0-rc.3"
+    kotlin("jvm") version "2.3.20"
     id("org.sonarqube") version "7.2.3.7755"
+    id("info.solidsoft.pitest") version "1.19.0-rc.3"
     jacoco
 }
 
-group = "vn.io.dungxnd"
-version = "1.0-SNAPSHOT"
-
-repositories {
-    mavenCentral()
-}
-
-val kotestVersion = "6.1.7"
+val kotestVersion = "6.1.10"
 
 dependencies {
     testImplementation(kotlin("test"))
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-extensions-junitxml:$kotestVersion")
-    testImplementation("com.michaelstrasser:kotest-html-reporter:0.8.2")
-}
-
-jacoco {
-    toolVersion = "0.8.14"
 }
 
 tasks.test {
     useJUnitPlatform()
+    systemProperty("gradle.build.dir", project.buildDir)
+    reports {
+        junitXml.required.set(false)
+    }
     finalizedBy(tasks.jacocoTestReport)
-    systemProperty("gradle.test.worker.log.file", "true")
 }
 
 tasks.jacocoTestReport {
@@ -38,15 +28,7 @@ tasks.jacocoTestReport {
     reports {
         xml.required.set(true)
         html.required.set(true)
-        csv.required.set(false)
     }
-}
-
-// Pitest config
-pitest {
-    targetClasses.set(setOf("vn.io.dungxnd.*"))
-    outputFormats.set(setOf("XML", "HTML"))
-    timestampedReports.set(false)
 }
 
 sonar {
@@ -54,14 +36,10 @@ sonar {
         property("sonar.projectKey", "DungxND_TestingCourse")
         property("sonar.organization", "dungxnd")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.sources", "${project.projectDir}/src/main/kotlin")
-        property("sonar.tests", "${project.projectDir}/src/test/kotlin")
-        property("sonar.kotlin.binaries", "${project.projectDir}/build/classes/kotlin/main")
-        property("sonar.kotlin.test.binaries", "${project.projectDir}/build/classes/kotlin/test")
-        property("sonar.coverage.jacoco.xmlReportPaths",
-            "build/reports/jacoco/test/jacocoTestReport.xml")
-        property("sonar.junit.reportPaths",
-            "build/test-results/test")
+        property("sonar.sources", "src/main/kotlin")
+        property("sonar.tests", "src/test/kotlin")
+        property("sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml")
+        property("sonar.junit.reportPaths", "build/test-results/kotest")
     }
 }
 
