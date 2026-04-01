@@ -2,6 +2,7 @@ plugins {
     kotlin("jvm") version "2.3.20"
     id("org.sonarqube") version "7.2.3.7755"
     id("info.solidsoft.pitest") version "1.19.0-rc.3"
+    id("io.qameta.allure") version "3.1.0"
     jacoco
 }
 
@@ -12,8 +13,13 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-extensions-junitxml:$kotestVersion")
+    testImplementation("io.kotest:kotest-extensions-allure:$kotestVersion")
 }
 
+allure {
+    adapter.autoconfigure = false
+    version = "2.33.0"
+}
 tasks.test {
     useJUnitPlatform()
     systemProperty("gradle.build.dir", project.buildDir)

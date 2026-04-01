@@ -7,6 +7,11 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     name: Build, Test & Analyze
@@ -31,15 +36,6 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
 
-#      - name: Cache Gradle packages
-#        uses: actions/cache@v5
-#        with:
-#          path: |
-#            ~/.gradle/caches
-#            ~/.gradle/wrapper
-#          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-#          restore-keys: ${{ runner.os }}-gradle
-
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -47,6 +43,10 @@ jobs:
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: ./gradlew test jacocoTestReport sonar --info
+
+      - name: Generate Allure Report
+        if: always()
+        run: ./gradlew allureReport
 
       - name: Upload Kotest HTML report
         uses: actions/upload-artifact@v7
@@ -68,3 +68,22 @@ jobs:
         with:
           name: test-results
           path: build/test-results/test/
+
+      - name: Upload Pages Artifact
+        if: always() && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: build/reports/allure-report
+
+  deploy:
+    name: Deploy to GitHub Pages
+    if: always() && github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
