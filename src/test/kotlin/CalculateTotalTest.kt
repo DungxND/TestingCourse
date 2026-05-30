@@ -220,4 +220,46 @@ class CalculateTotalTest : FunSpec({
         )
         result shouldBe 45_000L
     }
+    test("DF-01: calculateTotal(0, \"standard\", 0) -> IllegalArgumentException") {
+        shouldThrow<IllegalArgumentException> {
+            calculateTotal(0L, "standard", 0L)
+        }
+    }
+
+    test("DF-02: calculateTotal(100000, \"standard\", 5000) -> IllegalArgumentException") {
+        shouldThrow<IllegalArgumentException> {
+            calculateTotal(100000L, "standard", 5000L)
+        }
+    }
+
+    test("DF-03: calculateTotal(100000, \"gold\", 10000) -> IllegalArgumentException") {
+        shouldThrow<IllegalArgumentException> {
+            calculateTotal(100000L, "gold", 10000L)
+        }
+    }
+
+    test("DF-04: calculateTotal(50000, \"standard\", 10000) -> 50000") {
+        val result = calculateTotal(50000L, "standard", 10000L)
+        result shouldBe 50000L
+    }
+
+    test("DF-05: calculateTotal(120000, \"vip\", 10000) -> 98000") {
+        val result = calculateTotal(120000L, "vip", 10000L)
+        result shouldBe 98000L
+    }
+
+    test("DF-06: calculateTotal(120000, \"vip\", 200000) -> 0") {
+        val result = calculateTotal(120000L, "vip", 200000L)
+        result shouldBe 0L
+    }
+
+    test("DF-07: calculateTotal(50000, \"vip\", 10000) -> 45000") {
+        val result = calculateTotal(50000L, "vip", 10000L)
+        result shouldBe 45000L
+    }
+
+    test("DF-08: calculateTotal(150000, \"standard\", 200000) -> 0") {
+        val result = calculateTotal(150000L, "standard", 200000L)
+        result shouldBe 0L
+    }
 })
